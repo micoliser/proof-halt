@@ -34,13 +34,7 @@ const REGISTER_EXAMPLE = JSON.stringify(
   2,
 );
 
-const IFACE = `@gl.contract_interface
-class HaltModuleIface:
-    class View:
-        def is_action_allowed(self, protocol_id: int, action: str) -> bool: ...
 
-    class Write:
-        pass`;
 
 const CTOR = `class DemoVault(gl.Contract):
     halt_module: Address
@@ -55,7 +49,7 @@ const CTOR = `class DemoVault(gl.Contract):
 const GATE = `WITHDRAW_ACTION = "withdraw"
 
 def _require_withdraw_allowed(self) -> None:
-    halt = HaltModuleIface(self.halt_module)
+    halt = gl.contract.get_at(self.halt_module)
     allowed = halt.view().is_action_allowed(
         int(self.protocol_id),
         WITHDRAW_ACTION,
@@ -240,9 +234,8 @@ export default function GuidePage() {
           </p>
           <CodeBlock
             title="contracts/demo_vault.py — Depends (first line)"
-            code={`# { "Depends": "py-genlayer:1jb45aa8ynh2a9c9xn3b7qqh8sm5q93hwfp7jqmwsfhh8jpz09h6" }`}
+            code={`# { "Depends": "py-genlayer:5jycge4q8k23462jtb0b9fyey1s9qz928sz2nbrd9mg4sxqg2qng" }`}
           />
-          <CodeBlock title="Halt Module interface" code={IFACE} />
           <CodeBlock title="Constructor — lock the protocol id" code={CTOR} />
           <CodeBlock title="Gate withdraw (this repo’s Demo Vault)" code={GATE} />
           <CodeBlock title="Halt gate rules" code={GATE_RULES} />
@@ -274,7 +267,7 @@ export default function GuidePage() {
                   target="_blank"
                   rel="noreferrer"
                 >
-                  studio.genlayer.com
+                  studio-next.genlayer.com
                 </a>
                 , new intelligent contract, paste{" "}
                 <code className="font-mono">contracts/demo_vault.py</code>.

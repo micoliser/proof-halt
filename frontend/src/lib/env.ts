@@ -6,8 +6,8 @@ function trim(value: string | undefined): string {
 
 export const STUDIONET_CHAIN_ID = 61997;
 export const STUDIONET_RPC_URL = "https://studio-next.genlayer.com/api";
-export const STUDIONET_EXPLORER = "https://explorer-studio-dev.genlayer.com";
-export const STUDIONET_STUDIO = "https://studio.genlayer.com";
+export const STUDIONET_EXPLORER = "https://explorer-studio-next.genlayer.com";
+export const STUDIONET_STUDIO = "https://studio-next.genlayer.com";
 
 export const publicEnv = {
   apiUrl: trim(process.env.NEXT_PUBLIC_API_URL) || "http://localhost:8000",

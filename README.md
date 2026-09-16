@@ -19,8 +19,8 @@ Halt gate: **ACTIVE** allows every action. **HALTED** is fail-closed (only liste
 
 | Contract | Address |
 |---|---|
-| Halt Module | `0xcaA299e042651B89860C4a5b474b5Ff6DB21130f` |
-| Demo Vault | `0x96B71926C042d9783fb53d73f84aE1412Ff12748` |
+| Halt Module | `0x5B53eBe29f90c1DcC634E5a80256f3Fe1FF12812` |
+| Demo Vault | `0xd97e0FA033199DAf6f44725aa75Fc02c13314362` |
 
 - RPC: `https://studio.genlayer.com/api`
 - Chain id: `61999`

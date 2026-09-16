@@ -54,7 +54,7 @@ Every settled evaluation appends an immutable `CaseEvent` (actor, statement, evi
 
 ## Nondet isolation
 
-Evidence fetch and LLM calls run inside `run_nondet_unsafe`. Protocol status and `emit_transfer` (refund, slash, burn) run **after** consensus returns. Locals are copied out of storage before the nondet block.
+Evidence fetch and LLM calls are encapsulated in an inner `leader_fn` and executed via `gl.eq_principle.strict_eq(leader_fn)`. Protocol status and `emit_transfer` (refund, slash, burn) run **after** consensus returns. Locals are copied out of storage before the nondet block.
 
 ## Fail-closed LLM garbage
 

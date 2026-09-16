@@ -88,8 +88,9 @@ so a fresh halt is visible immediately after a wallet tx. Full route shapes:
 
 ## Consensus
 
-- Live evidence → `gl.nondet.web.render` + `gl.nondet.exec_prompt` inside a nondet block.
-- Validators re-run and must agree on the **decision field** (`exploit` / `outcome` / `remediated`).
+- Live evidence → `gl.nondet.web.render` + `gl.nondet.exec_prompt` wrapped in an inner `leader_fn`.
+- The `leader_fn` internally extracts the JSON and returns only a strict primitive (`bool` or `str` enum). 
+- Validators execute this via `gl.eq_principle.strict_eq(leader_fn)`, enforcing strict equivalence on the final extracted decision (`exploit` / `outcome` / `remediated`), which bypasses non-deterministic JSON string spacing issues.
 - Aggregation (locked): majority of successfully fetched trusted-domain pages; fetch count ≥ `min_evidence`.
 - Side effects (status, `emit_transfer` bond settle) happen **after** consensus.
 - Case head `verdict_*` is report-round only; later rounds live in append-only `CaseEvent`s.
