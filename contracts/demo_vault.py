@@ -1,69 +1,51 @@
-# { "Depends": "py-genlayer:1jb45aa8ynh2a9c9xn3b7qqh8sm5q93hwfp7jqmwsfhh8jpz09h6" }
+# { "Depends": "py-genlayer:5jycge4q8k23462jtb0b9fyey1s9qz928sz2nbrd9mg4sxqg2qng" }
 
-from genlayer import *
-from genlayer.py.storage import TreeMap
+import genlayer as gl
+from genlayer.storage import TreeMap
 
 
 WITHDRAW_ACTION = "withdraw"
 
 
-@gl.evm.contract_interface
-class _Recipient:
-    class View:
-        pass
-
-    class Write:
-        pass
-
-
-@gl.contract_interface
-class HaltModuleIface:
-    class View:
-        def is_action_allowed(self, protocol_id: int, action: str) -> bool: ...
-
-    class Write:
-        pass
-
-
-class DemoVault(gl.Contract):
+class DemoVault(gl.contract.Contract):
     """
     Toy vault governed by a Halt Module protocol.
     Deposits are always accepted; withdraws require is_action_allowed(..., "withdraw").
     """
 
-    halt_module: Address
-    protocol_id: u256
-    balances: TreeMap[str, u256]
+    halt_module: gl.Address
+    protocol_id: gl.u256
+    balances: TreeMap[str, gl.u256]
 
-    def __init__(self, halt_module: Address, protocol_id: int):
+    def __init__(self, halt_module: gl.Address, protocol_id: int):
         halt_module = self._parse_address(halt_module)
         pid = int(protocol_id)
         if pid < 0:
             raise gl.vm.UserError("protocol_id must be >= 0")
         self.halt_module = halt_module
-        self.protocol_id = u256(pid)
+        self.protocol_id = gl.u256(pid)
 
-    def _parse_address(self, address) -> Address:
-        if isinstance(address, Address):
+    def _parse_address(self, address) -> gl.Address:
+        if isinstance(address, gl.Address):
             return address
         if isinstance(address, (bytes, bytearray)):
-            return Address(bytes(address))
+            return gl.Address(bytes(address))
         if isinstance(address, int):
-            return Address("0x" + format(address, "040x"))
+            return gl.Address("0x" + format(address, "040x"))
         if isinstance(address, str):
             s = address.strip()
             if not s.startswith(("0x", "0X")):
                 s = "0x" + s
-            return Address(s)
+            return gl.Address(s)
         if hasattr(address, "as_bytes"):
-            return Address(address.as_bytes)
+            return gl.Address(address.as_bytes)
         raise gl.vm.UserError("invalid address")
 
-    def _balance_key(self, address: Address) -> str:
+    def _balance_key(self, address: gl.Address) -> str:
         return address.as_hex
 
     def _require_withdraw_allowed(self) -> None:
-        halt = HaltModuleIface(self.halt_module)
+        halt = gl.contract.get_at(self.halt_module)
         allowed = halt.view().is_action_allowed(int(self.protocol_id), WITHDRAW_ACTION)
         if not allowed:
             raise gl.vm.UserError(
@@ -78,8 +60,8 @@ class DemoVault(gl.Contract):
             raise gl.vm.UserError("must send a non-zero amount")
         sender = gl.message.sender_address
         key = self._balance_key(sender)
-        current = int(self.balances.get(key, u256(0)))
-        self.balances[key] = u256(current + amount)
+        current = int(self.balances.get(key, gl.u256(0)))
+        self.balances[key] = gl.u256(current + amount)
 
     @gl.public.write
     def withdraw(self, amount: int) -> None:
@@ -89,16 +71,16 @@ class DemoVault(gl.Contract):
             raise gl.vm.UserError("amount must be > 0")
         sender = gl.message.sender_address
         key = self._balance_key(sender)
-        current = int(self.balances.get(key, u256(0)))
+        current = int(self.balances.get(key, gl.u256(0)))
         if amt > current:
             raise gl.vm.UserError("insufficient balance")
-        self.balances[key] = u256(current - amt)
-        _Recipient(sender).emit_transfer(value=u256(amt))
+        self.balances[key] = gl.u256(current - amt)
+        gl.contract.get_at(sender).emit_transfer(value=gl.u256(amt))
 
     @gl.public.view
-    def get_balance(self, address) -> u256:
+    def get_balance(self, address) -> gl.u256:
         addr = self._parse_address(address)
-        return self.balances.get(self._balance_key(addr), u256(0))
+        return self.balances.get(self._balance_key(addr), gl.u256(0))
 
     @gl.public.view
     def get_config(self) -> dict:

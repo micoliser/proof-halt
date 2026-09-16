@@ -45,7 +45,7 @@ export default function ReportExploitPage() {
       return;
     }
     if (!isConnected) {
-      setLocalError("Connect MetaMask first.");
+      setLocalError("Connect wallet first.");
       return;
     }
     if (p.status !== "ACTIVE") {
@@ -81,7 +81,7 @@ export default function ReportExploitPage() {
       [p.id, allegation.trim(), JSON.stringify(evidence)],
       {
         value: bond,
-        confirmingMessage: `Confirm in MetaMask — send exactly ${p.reporter_bond_gen} GEN…`,
+        confirmingMessage: `Confirm in wallet — send exactly ${p.reporter_bond_gen} GEN…`,
         submittedMessage: "Report submitted. Waiting for confirmation…",
         reviewingMessage: "Validators are reviewing the evidence… this can take a minute.",
         confirmedMessage: "Report finished. Check whether the protocol halted.",
@@ -147,7 +147,7 @@ export default function ReportExploitPage() {
             <TextArea
               value={urls}
               onChange={(e) => setUrls(e.target.value)}
-              placeholder="https://rentry.co/your-incident-page"
+              placeholder={`https://${p?.trusted_domains?.[0] || "example.com"}/your-incident-page`}
               required
             />
           </Field>

@@ -1,5 +1,5 @@
 import { createClient } from "genlayer-js";
-import { studionet } from "genlayer-js/chains";
+import { studioDevnet } from "genlayer-js/chains";
 import { publicEnv, STUDIONET_CHAIN_ID, STUDIONET_RPC_URL } from "@/lib/env";
 
 const fallbackChain = {
@@ -15,7 +15,7 @@ const fallbackChain = {
 };
 
 export function studioChain() {
-  return studionet || fallbackChain;
+  return studioDevnet || fallbackChain;
 }
 
 export function createReadClient() {
@@ -24,28 +24,7 @@ export function createReadClient() {
   });
 }
 
-export function requireMetaMaskProvider() {
-  if (typeof window === "undefined") {
-    throw new Error("Wallet is only available in the browser.");
-  }
-  const provider = window.ethereum;
-  if (!provider) {
-    throw new Error("No wallet found. Install MetaMask.");
-  }
-  if (!provider.isMetaMask) {
-    throw new Error("Only MetaMask is supported. Switch to MetaMask and retry.");
-  }
-  return provider;
-}
 
-export function createWriteClient(account: `0x${string}`) {
-  const provider = requireMetaMaskProvider();
-  return createClient({
-    chain: studioChain(),
-    account,
-    provider,
-  });
-}
 
 export const WRITE_METHODS = {
   registerProtocol: "register_protocol",

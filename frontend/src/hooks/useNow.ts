@@ -8,6 +8,7 @@ export function useNow(enabled = true) {
 
   useEffect(() => {
     if (!enabled) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setNow(null);
       return;
     }

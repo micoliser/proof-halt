@@ -103,7 +103,7 @@ export default function ProtocolDetailPage() {
       WRITE_METHODS.finalizeAppeal,
       [p.id],
       {
-        confirmingMessage: "Confirm finalize in MetaMask…",
+        confirmingMessage: "Confirm finalize in wallet…",
         submittedMessage: "Finalize submitted…",
         confirmedMessage: "Escrow released to the reporter. Protocol stays halted until an authority unhalts.",
         syncProtocolId: p.id,

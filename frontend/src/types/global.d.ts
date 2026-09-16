@@ -3,7 +3,7 @@ export {};
 declare global {
   interface Window {
     ethereum?: {
-      isMetaMask?: boolean;
+      iswallet?: boolean;
       request: (args: { method: string; params?: unknown[] }) => Promise<unknown>;
     };
   }

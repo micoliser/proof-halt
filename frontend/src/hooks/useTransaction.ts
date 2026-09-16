@@ -101,7 +101,7 @@ export function useTransaction() {
       setTxHash(null);
 
       const toastId = toast.loading(
-        opts?.confirmingMessage || "Confirm the transaction in MetaMask…",
+        opts?.confirmingMessage || "Confirm the transaction in wallet…",
       );
       let slowTimer: ReturnType<typeof setTimeout> | undefined;
       let submittedHash: string | null = null;

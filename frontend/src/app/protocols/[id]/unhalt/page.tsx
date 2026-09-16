@@ -46,7 +46,7 @@ export default function UnhaltPage() {
       return;
     }
     if (!isConnected) {
-      setLocalError("Connect MetaMask first.");
+      setLocalError("Connect wallet first.");
       return;
     }
     if (!isAuthority) {
@@ -86,7 +86,7 @@ export default function UnhaltPage() {
       [p.id, statement.trim(), JSON.stringify(evidence)],
       {
         value,
-        confirmingMessage: `Confirm in MetaMask — send exactly ${p.reporter_bond_gen} GEN…`,
+        confirmingMessage: `Confirm in wallet — send exactly ${p.reporter_bond_gen} GEN…`,
         submittedMessage: "Request submitted. Waiting for confirmation…",
         reviewingMessage: "Validators are reviewing the remediation evidence…",
         confirmedMessage:
@@ -151,7 +151,7 @@ export default function UnhaltPage() {
             <TextArea
               value={urls}
               onChange={(e) => setUrls(e.target.value)}
-              placeholder="https://rentry.co/your-remediation-page"
+              placeholder={`https://${p?.trusted_domains?.[0] || "example.com"}/your-remediation-page`}
               required
             />
           </Field>

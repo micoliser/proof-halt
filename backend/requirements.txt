@@ -13,4 +13,4 @@ whitenoise>=6.7,<7
 
 # GenLayer Python SDK — used for calldata encode/decode against studionet
 # JSON-RPC (`gen_call`). See IMPLEMENTATION_PLAN.md §15 D4.
-genlayer-py>=0.16,<0.17
+genlayer-py==0.19.0rc2

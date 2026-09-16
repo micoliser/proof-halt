@@ -22,7 +22,7 @@ const REGISTER_EXAMPLE = JSON.stringify(
     name: "Demo Vault Protocol",
     exploit_definition:
       "Halt if the evidence page states that an active exploit or ongoing drain of user funds is currently occurring.",
-    trusted_domains_json: '["rentry.co"]',
+    trusted_domains_json: '["gist.github.com"]',
     protected_actions_json: '["withdraw", "transfer"]',
     allowed_while_halted_json: "[]",
     reporter_bond: 1000000000000000000,
@@ -220,7 +220,7 @@ export default function GuidePage() {
           <ul className="list-disc space-y-2 pl-5 text-sm text-muted">
             <li>
               <code className="font-mono text-ink">trusted_domains</code> — hosts
-              only (example: <code className="font-mono">rentry.co</code>). Evidence
+              only (example: <code className="font-mono">gist.github.com</code>). Evidence
               URLs must match.
             </li>
             <li>
@@ -308,7 +308,7 @@ export default function GuidePage() {
             <li>
               Evidence URLs must be <strong className="text-ink">public</strong>.
               Validators cannot fetch localhost. Use{" "}
-              <code className="font-mono">rentry.co</code> (or another host you
+              <code className="font-mono">gist.github.com</code> (or another host you
               listed).
             </li>
             <li>

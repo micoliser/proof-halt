@@ -61,7 +61,7 @@ const ROLES = [
 ];
 
 const DEMO = [
-  "Connect MetaMask and switch to Studionet.",
+  "Connect wallet and switch to Studionet.",
   "Deposit in the Demo Vault, then withdraw once while the protocol is active.",
   "File a bonded report with a public evidence page.",
   "When validators agree, withdrawals freeze. Deposits still work.",
@@ -234,7 +234,7 @@ export default function HomePage() {
           <div className="space-y-4 p-6 sm:p-8">
             <h2 className="text-xl font-semibold tracking-tight">Walk the demo</h2>
             <p className="max-w-2xl text-sm text-muted">
-              You need MetaMask on Studionet and a little GEN from the Studio faucet.
+              You need wallet on Studionet and a little GEN from the Studio faucet.
               The loop takes a few minutes because validators read the evidence pages.
             </p>
             <ol className="max-w-2xl space-y-3 text-sm">

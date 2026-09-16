@@ -120,6 +120,6 @@ Failed unhalt burns via transfer to the zero address.
 
 ## Network
 
-**Studionet only** (RPC `https://studio.genlayer.com/api`, chain id `61999`). Localnet is out of scope for this environment.
+**Studionet only** (RPC `https://studio.genlayer.com/api`, chain id `61997`). Localnet is out of scope for this environment.
 
 See [README.md](../README.md), [SECURITY.md](SECURITY.md), and [demo_script.md](demo_script.md).

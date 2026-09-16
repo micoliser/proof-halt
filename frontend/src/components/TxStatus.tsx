@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 
 const LABELS: Record<TxPhase, string> = {
   IDLE: "",
-  CONFIRMING: "Confirm in MetaMask…",
+  CONFIRMING: "Confirm in wallet…",
   SUBMITTED: "Waiting for confirmation…",
   SYNCING: "Updating status…",
   CONFIRMED: "Confirmed",

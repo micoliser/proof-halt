@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "chainId": 61997,
+  "network": "studio-next",
+  "measuredAt": "2026-09-15T00:00:00Z",
+  "deploy": {
+    "leaderTimeunitsAllocation": "125",
+    "validatorTimeunitsAllocation": "250",
+    "executionBudgetPerRound": "786434",
+    "totalMessageFees": "0",
+    "rotationsPerRound": "1"
+  },
+  "methods": {
+    "withdraw": {
+      "leaderTimeunitsAllocation": "125",
+      "validatorTimeunitsAllocation": "250",
+      "executionBudgetPerRound": "786434",
+      "totalMessageFees": "10000000000000000",
+      "rotationsPerRound": "1"
+    }
+  }
+}

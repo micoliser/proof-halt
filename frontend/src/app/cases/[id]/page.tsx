@@ -112,7 +112,7 @@ export default function CaseDetailPage() {
       return;
     }
     if (!isConnected) {
-      setChallengeError("Connect MetaMask first.");
+      setChallengeError("Connect wallet first.");
       return;
     }
     if (!canChallenge) {
@@ -148,7 +148,7 @@ export default function CaseDetailPage() {
       [p.id, statement.trim(), JSON.stringify(evidence)],
       {
         value,
-        confirmingMessage: `Confirm in MetaMask — send exactly ${p.reporter_bond_gen} GEN…`,
+        confirmingMessage: `Confirm in wallet — send exactly ${p.reporter_bond_gen} GEN…`,
         submittedMessage: "Challenge submitted. Waiting for confirmation…",
         reviewingMessage: "Validators are reviewing the challenge… this can take a minute.",
         confirmedMessage: "Challenge finished. Check the timeline for the outcome.",
@@ -169,7 +169,7 @@ export default function CaseDetailPage() {
       return;
     }
     if (!isConnected) {
-      setFinalizeError("Connect MetaMask first.");
+      setFinalizeError("Connect wallet first.");
       return;
     }
     await finalizeTx.execute(
@@ -177,7 +177,7 @@ export default function CaseDetailPage() {
       WRITE_METHODS.finalizeAppeal,
       [p.id],
       {
-        confirmingMessage: "Confirm finalize in MetaMask…",
+        confirmingMessage: "Confirm finalize in wallet…",
         submittedMessage: "Finalize submitted…",
         confirmedMessage:
           "Escrow released to the reporter. The protocol stays halted until an authority unhalts.",
@@ -314,7 +314,7 @@ export default function CaseDetailPage() {
               <TextArea
                 value={urls}
                 onChange={(e) => setUrls(e.target.value)}
-                placeholder="https://rentry.co/your-challenge-page"
+                placeholder={`https://${p?.trusted_domains?.[0] || "example.com"}/your-challenge-page`}
                 required
               />
             </Field>

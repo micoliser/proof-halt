@@ -66,7 +66,11 @@ export function extractExecutionError(receipt: unknown): string | null {
 
 function unwrapReturn(value: unknown): unknown {
   if (value === undefined || value === null) return undefined;
-  if (typeof value === "number" || typeof value === "bigint" || typeof value === "boolean") {
+  if (
+    typeof value === "number" ||
+    typeof value === "bigint" ||
+    typeof value === "boolean"
+  ) {
     return value;
   }
   if (typeof value === "string") {
@@ -104,19 +108,58 @@ export function asOnchainId(value: unknown): number | null {
 
 export function humanizeTxError(err: unknown): string {
   const raw =
-    err instanceof Error ? err.message : typeof err === "string" ? err : String(err);
+    err instanceof Error
+      ? err.message
+      : typeof err === "string"
+        ? err
+        : String(err);
+
+  // Viem simulation errors often hide the actual revert string deep in the cause/details.
+  // We stringify the entire error object to search for UserError patterns.
+  try {
+    const blob = JSON.stringify(err, Object.getOwnPropertyNames(err));
+    const patterns = [
+      /Withdraw blocked[^"\\]*/i,
+      /insufficient balance/i,
+      /must send a non-zero amount/i,
+      /UserError[:\s"]+([^"\\]+)/i,
+      /"Rollback"\s*:\s*"([^"]+)"/i,
+      /Rollback[:\s]+([^"\\]+)/i,
+    ];
+    for (const re of patterns) {
+      const m = blob.match(re);
+      if (m) {
+        const text = (m[1] || m[0] || "").trim();
+        if (text && text.length < 400) return text;
+      }
+    }
+  } catch {
+    // Ignore stringify errors
+  }
+
   const lower = raw.toLowerCase();
 
-  if (lower.includes("user rejected") || lower.includes("denied") || lower.includes("rejected the request")) {
-    return "Transaction was rejected in MetaMask.";
+  if (
+    lower.includes("user rejected") ||
+    lower.includes("denied") ||
+    lower.includes("rejected the request")
+  ) {
+    return "Transaction was rejected in wallet.";
   }
   if (lower.includes("rate limit")) {
     return "Network is rate-limiting requests. Wait a few seconds and try again.";
   }
-  if (lower.includes("timed out") || lower.includes("timeout") || lower.includes("failed to fetch")) {
+  if (
+    lower.includes("timed out") ||
+    lower.includes("timeout") ||
+    lower.includes("failed to fetch")
+  ) {
     return "Could not confirm the transaction from this browser. Refresh the page to see the latest status.";
   }
-  if (lower.includes("insufficient funds") || lower.includes("exceeds the balance")) {
+  if (
+    lower.includes("insufficient funds") ||
+    lower.includes("exceeds the balance")
+  ) {
     return "Not enough GEN. Fund your wallet from the Studio faucet (💧).";
   }
   if (
@@ -130,12 +173,16 @@ export function humanizeTxError(err: unknown): string {
   if (lower.includes("withdraw blocked") || lower.includes("not allowed")) {
     return "Withdrawal is paused while this protocol is halted. Your balance was not changed.";
   }
-  if (lower.includes("rejected on-chain") || lower.includes("finished_with_error") || lower.includes("reverted")) {
+  if (
+    lower.includes("rejected on-chain") ||
+    lower.includes("finished_with_error") ||
+    lower.includes("reverted")
+  ) {
     return raw.length < 200 && !lower.includes("finished_with_error")
       ? raw
       : "This action was rejected on-chain. Your balance was not changed.";
   }
-  if (lower.includes("only metamask")) {
+  if (lower.includes("only wallet")) {
     return raw;
   }
   return raw || "Transaction failed.";
@@ -143,5 +190,9 @@ export function humanizeTxError(err: unknown): string {
 
 export function isUserRejection(message: string): boolean {
   const lower = message.toLowerCase();
-  return lower.includes("user rejected") || lower.includes("denied") || lower.includes("rejected in metamask");
+  return (
+    lower.includes("user rejected") ||
+    lower.includes("denied") ||
+    lower.includes("rejected in wallet")
+  );
 }

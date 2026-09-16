@@ -90,14 +90,14 @@ export default function VaultPage() {
     setLocalError(null);
     reset();
     if (!isConnected) {
-      setLocalError("Connect MetaMask first.");
+      setLocalError("Connect wallet first.");
       return;
     }
     const value = parseAmount();
     if (value == null) return;
     await execute(publicEnv.demoVaultAddress, WRITE_METHODS.deposit, [], {
       value,
-      confirmingMessage: "Confirm deposit in MetaMask…",
+      confirmingMessage: "Confirm deposit in wallet…",
       submittedMessage: "Deposit submitted…",
       confirmedMessage: "Deposit confirmed.",
       onConfirmed: refresh,
@@ -108,7 +108,7 @@ export default function VaultPage() {
     setLocalError(null);
     reset();
     if (!isConnected) {
-      setLocalError("Connect MetaMask first.");
+      setLocalError("Connect wallet first.");
       return;
     }
     if (withdrawBlocked) {
@@ -119,8 +119,12 @@ export default function VaultPage() {
     }
     const value = parseAmount();
     if (value == null) return;
+    if (balanceQ.data !== undefined && value > balanceQ.data) {
+      setLocalError(`Insufficient balance. You only have ${formatGen(balanceQ.data)} GEN.`);
+      return;
+    }
     await execute(publicEnv.demoVaultAddress, WRITE_METHODS.withdraw, [value], {
-      confirmingMessage: "Confirm withdrawal in MetaMask…",
+      confirmingMessage: "Confirm withdrawal in wallet…",
       submittedMessage: "Withdrawal submitted…",
       confirmedMessage: "Withdrawal confirmed.",
       onConfirmed: refresh,

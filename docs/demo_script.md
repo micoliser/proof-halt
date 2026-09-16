@@ -1,6 +1,6 @@
 # Demo script — ProofHalt (v1.1)
 
-Studionet only: chain id **61999**, RPC `https://studio.genlayer.com/api`,
+Studionet only: chain id **61997**, RPC `https://studio.genlayer.com/api`,
 Studio `https://studio.genlayer.com`, faucet 💧 in the Studio UI.
 
 Contract addresses: [`deploy/notes.md`](../deploy/notes.md). Put them in
@@ -21,7 +21,7 @@ Unified stake: every bonded call sends **exactly** `B` (the reporter bond).
 2. `cd frontend && cp .env.example .env.local` and set:
    - `NEXT_PUBLIC_API_URL=http://localhost:8000`
    - `NEXT_PUBLIC_HALT_MODULE_ADDRESS` / `NEXT_PUBLIC_DEMO_VAULT_ADDRESS`
-   - `NEXT_PUBLIC_CHAIN_ID=61999`
+   - `NEXT_PUBLIC_CHAIN_ID=61997`
    - Server: `SYNC_SHARED_SECRET` if the backend has one (never `NEXT_PUBLIC_*`)
 3. `npm install && npm run dev` → http://localhost:3000
 4. MetaMask: Connect on the demo, then **Switch to studionet**. Fund GEN from Studio 💧

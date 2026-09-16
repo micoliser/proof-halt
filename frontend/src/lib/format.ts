@@ -150,6 +150,9 @@ export function trustedHostError(hostRaw: string): string | null {
   if (!host || !host.includes(".")) {
     return "Trusted domain must be a valid hostname.";
   }
+  if (host.length > 253) {
+    return "Trusted domain hostname is too long (max 253 chars).";
+  }
   if ([...host].some((c) => c.charCodeAt(0) > 127)) {
     return "Trusted domain must be ASCII (use punycode xn-- for international domains).";
   }
@@ -185,6 +188,9 @@ export function evidenceUrlsError(
   if (!urls.length) {
     return "Add at least one evidence link.";
   }
+  if (urls.length > 10) {
+    return "At most 10 evidence links are allowed.";
+  }
   const trusted = new Set(
     (trustedDomains ?? []).map((d) => normalizeHost(d)).filter(Boolean),
   );
@@ -198,6 +204,9 @@ export function evidenceUrlsError(
     const url = raw.trim();
     if (!url) {
       return "Evidence links must be non-empty.";
+    }
+    if (url.length > 2048) {
+      return "Evidence link is too long (max 2048 chars).";
     }
     if (!/^https?:\/\//i.test(url)) {
       return `Evidence links must start with http:// or https://. Check: ${url}`;

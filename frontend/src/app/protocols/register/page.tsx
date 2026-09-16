@@ -6,12 +6,23 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useAccount } from "wagmi";
 import { TxStatus } from "@/components/TxStatus";
-import { Card, Field, PrimaryButton, TextArea, TextInput } from "@/components/ui";
+import {
+  Card,
+  Field,
+  PrimaryButton,
+  TextArea,
+  TextInput,
+} from "@/components/ui";
 import { useHasMounted } from "@/hooks/useHasMounted";
 import { useTransaction } from "@/hooks/useTransaction";
 import { syncProtocol } from "@/lib/api";
 import { contractsConfigured, publicEnv } from "@/lib/env";
-import { csvToList, isEthAddress, parseGen, trustedHostError } from "@/lib/format";
+import {
+  csvToList,
+  isEthAddress,
+  parseGen,
+  trustedHostError,
+} from "@/lib/format";
 import { WRITE_METHODS } from "@/lib/genlayer/client";
 
 type FormState = {
@@ -39,24 +50,28 @@ const EMPTY: FormState = {
 export default function RegisterProtocolPage() {
   const router = useRouter();
   const mounted = useHasMounted();
-  const { isConnected } = useAccount();
+  const { address, isConnected } = useAccount();
   const { execute, txPhase, isLocked, error, txHash } = useTransaction();
   const [form, setForm] = useState(EMPTY);
   const [backups, setBackups] = useState(["", "", ""]);
   const [localError, setLocalError] = useState<string | null>(null);
 
-  const set = (key: keyof FormState) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
-    setForm((prev) => ({ ...prev, [key]: e.target.value }));
+  const set =
+    (key: keyof FormState) =>
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+      setForm((prev) => ({ ...prev, [key]: e.target.value }));
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLocalError(null);
     if (!contractsConfigured()) {
-      setLocalError("Contracts are not configured yet. Try again after deployment.");
+      setLocalError(
+        "Contracts are not configured yet. Try again after deployment.",
+      );
       return;
     }
     if (!isConnected) {
-      setLocalError("Connect MetaMask first.");
+      setLocalError("Connect wallet first.");
       return;
     }
 
@@ -68,7 +83,38 @@ export default function RegisterProtocolPage() {
       return;
     }
     if (domains.length === 0 || protectedActions.length === 0) {
-      setLocalError("Add at least one trusted website and one action to freeze.");
+      setLocalError(
+        "Add at least one trusted website and one action to freeze.",
+      );
+      return;
+    }
+    if (domains.length > 20) {
+      setLocalError("At most 20 trusted websites are allowed.");
+      return;
+    }
+    if (protectedActions.length > 20) {
+      setLocalError("At most 20 actions to freeze are allowed.");
+      return;
+    }
+    const longAction = protectedActions.find((a) => a.length > 64);
+    if (longAction) {
+      setLocalError(`Action "${longAction}" is too long (max 64 chars).`);
+      return;
+    }
+    if (allowed.length > 20) {
+      setLocalError("At most 20 exceptions while halted are allowed.");
+      return;
+    }
+    const longAllowed = allowed.find((a) => a.length > 64);
+    if (longAllowed) {
+      setLocalError(`Exception "${longAllowed}" is too long (max 64 chars).`);
+      return;
+    }
+    const overlap = allowed.find((a) => protectedActions.includes(a));
+    if (overlap) {
+      setLocalError(
+        `Action "${overlap}" cannot be both protected and allowed while halted.`,
+      );
       return;
     }
     for (const domain of domains) {
@@ -90,11 +136,15 @@ export default function RegisterProtocolPage() {
       setLocalError("Report bond must be greater than zero.");
       return;
     }
+    if (bond > BigInt("1000000000000000000000000")) {
+      setLocalError("Report bond must be at most 1,000,000 GEN.");
+      return;
+    }
 
     const minEvidence = Number(form.min_evidence || "1");
     const appeal = Number(form.appeal_window_seconds || "86400");
-    if (!Number.isInteger(minEvidence) || minEvidence < 1) {
-      setLocalError("Minimum evidence links must be a whole number of at least 1.");
+    if (!Number.isInteger(minEvidence) || minEvidence < 1 || minEvidence > 10) {
+      setLocalError("Minimum evidence links must be between 1 and 10.");
       return;
     }
 
@@ -106,6 +156,17 @@ export default function RegisterProtocolPage() {
     const invalidBackup = backupAddresses.find((addr) => !isEthAddress(addr));
     if (invalidBackup) {
       setLocalError(`Backup must be a 0x address: ${invalidBackup}`);
+      return;
+    }
+    if (
+      address &&
+      backupAddresses.some(
+        (addr) => addr.toLowerCase() === address.toLowerCase(),
+      )
+    ) {
+      setLocalError(
+        "You are already the owner; you cannot add yourself as a backup unhalter.",
+      );
       return;
     }
 
@@ -126,7 +187,7 @@ export default function RegisterProtocolPage() {
       WRITE_METHODS.registerProtocol,
       args,
       {
-        confirmingMessage: "Confirm registration in MetaMask…",
+        confirmingMessage: "Confirm registration in wallet…",
         submittedMessage: "Registration submitted…",
         confirmedMessage: "Protocol registered and active.",
         syncAll: true,
@@ -155,11 +216,13 @@ export default function RegisterProtocolPage() {
       <div>
         <h1 className="text-2xl font-semibold">Register a protocol</h1>
         <p className="text-sm text-muted">
-          You become the owner. Anyone can later post a bonded exploit report; if
-          validators agree, protected actions pause until you or a named backup
-          lift the halt. This
-          does not deploy a vault, see the{" "}
-          <Link href="/guide" className="text-accent underline-offset-2 hover:underline">
+          You become the owner. Anyone can later post a bonded exploit report;
+          if validators agree, protected actions pause until you or a named
+          backup lift the halt. This does not deploy a vault, see the{" "}
+          <Link
+            href="/guide"
+            className="text-accent underline-offset-2 hover:underline"
+          >
             developer guide
           </Link>{" "}
           to wire a contract to the new protocol id.
@@ -191,12 +254,12 @@ export default function RegisterProtocolPage() {
           </Field>
           <Field
             label="Trusted websites"
-            hint="Comma-separated hosts. Evidence links must come from these sites (example: rentry.co)."
+            hint="Comma-separated hosts. Evidence links must come from these sites (example: gist.github.com)."
           >
             <TextInput
               value={form.trusted_domains}
               onChange={set("trusted_domains")}
-              placeholder="rentry.co"
+              placeholder="example.com"
               required
             />
           </Field>
@@ -252,10 +315,12 @@ export default function RegisterProtocolPage() {
             </Field>
           </div>
           <div className="space-y-3">
-            <p className="text-sm font-medium text-ink">Backup unhalters (optional)</p>
+            <p className="text-sm font-medium text-ink">
+              Backup unhalters (optional)
+            </p>
             <p className="text-xs text-muted">
-              Up to three extra wallets that can lift a halt with the same stake B
-              and the same remediation bar. They cannot change policy.
+              Up to three extra wallets that can lift a halt with the same stake
+              B and the same remediation bar. They cannot change policy.
             </p>
             <div className="grid gap-3 sm:grid-cols-3">
               {backups.map((value, index) => (
@@ -264,7 +329,9 @@ export default function RegisterProtocolPage() {
                   value={value}
                   onChange={(e) =>
                     setBackups((prev) =>
-                      prev.map((addr, i) => (i === index ? e.target.value : addr)),
+                      prev.map((addr, i) =>
+                        i === index ? e.target.value : addr,
+                      ),
                     )
                   }
                   placeholder={`0x… backup ${index + 1}`}
@@ -274,7 +341,11 @@ export default function RegisterProtocolPage() {
             </div>
           </div>
 
-          <TxStatus phase={txPhase} error={error || localError} txHash={txHash} />
+          <TxStatus
+            phase={txPhase}
+            error={error || localError}
+            txHash={txHash}
+          />
 
           <PrimaryButton
             type="submit"
