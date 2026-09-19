@@ -80,7 +80,7 @@ class HaltModuleReader:
             time.sleep(self.throttle_seconds - elapsed)
 
     def _encode_call(self, method: str, args: Iterable[Any] | None) -> str:
-        payload: dict[str, Any] = {"method": method}
+        payload: dict[str, Any] = {"": method}
         arg_list = list(args or [])
         if arg_list:
             payload["args"] = arg_list

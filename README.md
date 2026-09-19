@@ -17,22 +17,22 @@ Halt gate: **ACTIVE** allows every action. **HALTED** is fail-closed (only liste
 
 ## Studionet contracts (this demo)
 
-| Contract | Address |
-|---|---|
+| Contract    | Address                                      |
+| ----------- | -------------------------------------------- |
 | Halt Module | `0x5B53eBe29f90c1DcC634E5a80256f3Fe1FF12812` |
-| Demo Vault | `0xd97e0FA033199DAf6f44725aa75Fc02c13314362` |
+| Demo Vault  | `0xd97e0FA033199DAf6f44725aa75Fc02c13314362` |
 
-- RPC: `https://studio.genlayer.com/api`
-- Chain id: `61999`
-- Studio: https://studio.genlayer.com
-- Explorer: https://explorer-studio.genlayer.com
+- RPC: `https://studio-next.genlayer.com/api`
+- Chain id: `61997`
+- Studio: https://studio-dev.genlayer.com
+- Explorer: https://explorer-studio-dev.genlayer.com
 
 The Demo Vault is constructed with `(halt_module, protocol_id)`. Registering a new protocol in the UI does **not** retarget that vault. When the app is running, open `/guide`, or read [contracts/README.md](contracts/README.md).
 
 ## Trust model (honesty)
 
-| On-chain (deterministic) | AI-judged (nondeterministic) |
-|---|---|
+| On-chain (deterministic)                                                                                                                               | AI-judged (nondeterministic)                                                                        |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------- |
 | Registration, unified bond `B`, escrow/settlement, status machine, appeal deadline, unhalt auth set, event append, `is_action_allowed`, vault balances | Whether fetched **page content** proves an active exploit, a false alarm, or successful remediation |
 
 This is **not** a cryptographic exploit detector. Validators read allowlisted web pages with an LLM. A weak definition, a captured trusted host, or a convincing fake page can still produce a halt. Bonds, host allowlists, challenge classification, and the unhalt vote are the brakes, not omniscience.
@@ -41,7 +41,7 @@ This is **not** a cryptographic exploit detector. Validators read allowlisted we
 
 **Fail-closed garbage:** if the leader output is missing, not JSON, or lacks a required decision (`exploit` / `remediated` / challenge `outcome`), the transaction reverts. The protocol does **not** halt on unparseable model output.
 
-**Governor risk:** whoever registers a protocol chooses trusted domains. Registering `attacker.example` and posting a fake page is a self-grief of *that* protocol, not of others. Governors and backups cannot use the challenge path to dodge paying a true reporter.
+**Governor risk:** whoever registers a protocol chooses trusted domains. Registering `attacker.example` and posting a fake page is a self-grief of _that_ protocol, not of others. Governors and backups cannot use the challenge path to dodge paying a true reporter.
 
 **Studionet only.** This project does not target localnet or mainnet.
 
@@ -60,13 +60,13 @@ More: [docs/architecture.md](docs/architecture.md), [docs/SECURITY.md](docs/SECU
 
 ## Repo layout
 
-| Path | Role |
-|---|---|
-| `contracts/` | `halt_module.py`, `demo_vault.py` |
-| `backend/` | Thin Django indexer (Postgres, Redis, Celery) |
-| `frontend/` | Next.js demo (MetaMask, Studionet) |
-| `docs/` | Architecture, demo script, security notes, sample evidence |
-| `tests/direct/` | Contract tests without live LLM |
+| Path            | Role                                                       |
+| --------------- | ---------------------------------------------------------- |
+| `contracts/`    | `halt_module.py`, `demo_vault.py`                          |
+| `backend/`      | Thin Django indexer (Postgres, Redis, Celery)              |
+| `frontend/`     | Next.js demo (MetaMask, Studionet)                         |
+| `docs/`         | Architecture, demo script, security notes, sample evidence |
+| `tests/direct/` | Contract tests without live LLM                            |
 
 ## Local setup
 

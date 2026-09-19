@@ -4,11 +4,11 @@
 
 | Setting | Value |
 |---|---|
-| GenLayer RPC | `https://studio.genlayer.com/api` |
-| Chain ID | `61999` |
+| GenLayer RPC | `https://studio-next.genlayer.com/api` |
+| Chain ID | `61997` |
 | Currency | GEN |
-| Explorer | https://explorer-studio.genlayer.com |
-| Studio | https://studio.genlayer.com |
+| Explorer | https://explorer-studio-dev.genlayer.com |
+| Studio | https://studio-dev.genlayer.com/run-debug |
 
 **Faucet:** Studionet does not auto-fund CLI/gltest keys. Use the Studio UI 💧 faucet for payable/bond flows. Zero-value writes and all reads need no funding.
 
@@ -18,8 +18,8 @@
 
 | Contract | Address | Notes |
 |---|---|---|
-| Halt Module | `0xcaA299e042651B89860C4a5b474b5Ff6DB21130f` | Deploy first |
-| Demo Vault | `0x96B71926C042d9783fb53d73f84aE1412Ff12748` | Ctor: Halt Module + protocol id (this vault uses `0`) |
+| Halt Module | `0x5B53eBe29f90c1DcC634E5a80256f3Fe1FF12812` | Deploy first |
+| Demo Vault | `0xd97e0FA033199DAf6f44725aa75Fc02c13314362` | Ctor: Halt Module + protocol id (this vault uses `0`) |
 
 ## Deploy order
 
@@ -79,8 +79,8 @@ Three process types — **all three**, or nothing polls the chain (see
 | `CORS_ORIGINS` | `https://your-app.vercel.app` | Frontend origins |
 | `DATABASE_URL` | `postgres://…` | Supabase/Neon; add `DB_SSL_REQUIRE=True` |
 | `REDIS_URL` | `rediss://…` | Upstash; also used as Celery broker/backend |
-| `GENLAYER_RPC_URL` | `https://studio.genlayer.com/api` | Studionet only |
-| `GENLAYER_CHAIN_ID` | `61999` | |
+| `GENLAYER_RPC_URL` | `https://studio-next.genlayer.com/api` | Studionet only |
+| `GENLAYER_CHAIN_ID` | `61997` | |
 | `HALT_MODULE_ADDRESS` | _halt module address above_ | Required for any sync |
 | `DEMO_VAULT_ADDRESS` | _vault address above_ | Reported by `/api/health` |
 | `GENLAYER_READER_ADDRESS` | `0x1111…1111` | `from` on read-only `gen_call`; needs no funds |
@@ -118,8 +118,8 @@ write, the UI waits for a receipt then `POST`s the Next.js proxy
 | `NEXT_PUBLIC_API_URL` | `http://localhost:8000` or `https://<api-host>` | Browser reads (`/api/...`) |
 | `NEXT_PUBLIC_HALT_MODULE_ADDRESS` | halt module above | Required for writes |
 | `NEXT_PUBLIC_DEMO_VAULT_ADDRESS` | vault above | Vault page |
-| `NEXT_PUBLIC_GENLAYER_RPC_URL` | `https://studio.genlayer.com/api` | Studionet only |
-| `NEXT_PUBLIC_CHAIN_ID` | `61999` | |
+| `NEXT_PUBLIC_GENLAYER_RPC_URL` | `https://studio-next.genlayer.com/api` | Studionet only |
+| `NEXT_PUBLIC_CHAIN_ID` | `61997` | |
 | `API_URL` | same as API URL | **Server-only** sync proxy target (defaults to `NEXT_PUBLIC_API_URL`) |
 | `SYNC_SHARED_SECRET` | same as backend | **Server-only** — never `NEXT_PUBLIC_*` |
 

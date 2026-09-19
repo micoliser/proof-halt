@@ -1,7 +1,7 @@
 # Demo script — ProofHalt (v1.1)
 
-Studionet only: chain id **61997**, RPC `https://studio.genlayer.com/api`,
-Studio `https://studio.genlayer.com`, faucet 💧 in the Studio UI.
+Studionet only: chain id **61997**, RPC `https://studio-next.genlayer.com/api`,
+Studio `https://studio-dev.genlayer.com/run-debug`, faucet 💧 in the Studio UI.
 
 Contract addresses: [`deploy/notes.md`](../deploy/notes.md). Put them in
 `frontend/.env.local` and `backend/.env`.
